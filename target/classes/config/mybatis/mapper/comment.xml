@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="c">
+	<!-- 코멘트 추가 -->
+	<insert id="comment_insert" parameterType="comm">
+		insert into COMMENTDB values(
+			seq_commentdb_idx.nextVal, 
+			#{idx}, 
+			#{name}, 
+			#{content}, 
+			#{pwd}, 
+			sysdate
+		)
+	</insert>
+	
+	<!-- 코멘트 조회 -->
+	<select id="comment_list" parameterType="java.util.Map" resultType="comm">
+		select * from (
+			select rank() over( order by c_idx ) no, c.* from
+			( select * from commentdb where idx=#{idx} ) c
+		)
+		where no between #{start} and #{end}
+	</select>
+	
+	<!-- 댓글삭제 -->
+	<delete id="comment_delete" parameterType="int">
+		delete from commentdb where c_idx=#{c_idx}
+	</delete>
+	
+	<!-- 전체 게시글 수 -->
+	<select id="comment_idx_count" resultType="int"
+	        parameterType="java.util.Map">
+	
+		select count(*) from commentdb where idx=#{idx}
+		
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
